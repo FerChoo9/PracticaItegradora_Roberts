@@ -1,26 +1,28 @@
 import express from "express";
+//Configurando la base de datos
+import mongoose from "mongoose";
 import handlebars from "express-handlebars";
-import { Server } from "socket.io";
-import viewsRouter from "./router/viewsRouter.js"
+//websockets
+import {Server} from "socket.io"
+import viewsRouter from "./routes/views.router.js"
+import autosRouter from "./routes/autos.router.js";
+
+mongoose.connect("mongodb+srv://fernandoroberts185:FerChooR_R@fercluster.ukgxrav.mongodb.net/?retryWrites=true&w=majority")
 
 const app = express();
-const httpServer = app.listen(8080,  () => console.log("Escuchando"));
-const socketServer = new Server(httpServer);
 
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
+
+const httpServer = app.listen(8080, ()=> console.log("FerChooR"));
+//COnfiguramos los webSockets
+const socketServer = new Server(httpServer)
+
+//Configurando handlebars
 app.engine("handlebars", handlebars.engine());
-app.set("views", "./src/views")
+app.set("views", "./src/views");
 app.set("view engine", "handlebars");
-app.use(express.static("./src/public"));
 
-app.use("/", viewsRouter);
-
-const mensajes = [];
-
-socketServer.on("connection", (socket) => {
-    console.log(`Se acaba de conectar ${socket.id}`)
-
-    socket.on("mensaje", (data) => {
-        mensajes.push(data)
-        socketServer.emit("nuevo_mensaje", mensajes)
-    })
-})
+app.use("static", express.static("./public"));
+app.use(viewsRouter)
+app.use("/autos", autosRouter);
