@@ -7,7 +7,7 @@ import {Server} from "socket.io"
 import viewsRouter from "./routes/views.router.js"
 import autosRouter from "./routes/autos.router.js";
 
-mongoose.connect("mongodb+srv://fernandoroberts185:FerChooR_R@fercluster.ukgxrav.mongodb.net/?retryWrites=true&w=majority")
+mongoose.connect("mongodb+srv://fernandoroberts185:@fercluster.ukgxrav.mongodb.net/?retryWrites=true&w=majority")
 
 const app = express();
 
